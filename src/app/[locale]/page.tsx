@@ -11,45 +11,54 @@ export default function Home() {
   return (
     <div className="w-full relative">
       {/* Cinematic Hero Section */}
-      <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative w-full min-h-[100svh] lg:h-screen flex items-center justify-center overflow-hidden py-12 lg:py-0">
         {/* Background color gradient/image placeholder */}
-        <div className="absolute inset-0 bg-gradient-to-br from-ivory to-neutral-warm dark:from-charcoal dark:to-charcoal-light z-0" />
+        <div className="absolute inset-0 bg-gradient-to-br from-ivory via-ivory to-neutral-warm dark:from-charcoal dark:via-charcoal dark:to-charcoal-light z-0" />
+        
+        {/* Premium Dot Pattern Overlay */}
+        <div className="absolute inset-0 opacity-[0.05] dark:opacity-[0.08] pointer-events-none z-0" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, var(--color-forest-green) 1px, transparent 0)", backgroundSize: "32px 32px" }}></div>
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none z-0 mix-blend-overlay dark:mix-blend-screen" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, var(--color-gold) 1px, transparent 0)", backgroundSize: "32px 32px", backgroundPosition: "16px 16px" }}></div>
+        
+        {/* Glow Effects */}
+        <div className="absolute top-0 right-0 w-3/4 h-3/4 bg-forest-green/5 dark:bg-gold/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none z-0"></div>
+        <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-gold/10 dark:bg-forest-green/10 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/3 pointer-events-none z-0"></div>
         
         {/* 3D Scene */}
         <HeroScene />
         
         {/* Content & Framed Portrait Grid */}
-        <div className="container mx-auto px-6 md:px-12 relative z-10 flex flex-col lg:flex-row items-center justify-between h-full pt-24 lg:pt-20 gap-12">
+        <div className="container mx-auto px-6 md:px-12 relative z-10 flex flex-col lg:flex-row items-center justify-between w-full h-full pt-2 lg:pt-20 gap-8 lg:gap-12 mt-4 lg:mt-0">
           
           {/* Text Content */}
-          <div className="w-full lg:w-[50%] flex flex-col items-start" data-cursor="view">
-            <h2 className="text-gold tracking-[0.2em] uppercase text-sm font-bold mb-4 bg-ivory/50 dark:bg-charcoal/50 backdrop-blur-md px-4 py-1 rounded-full border border-black/5 dark:border-white/5 inline-block">
+          <div className="w-full lg:w-[50%] flex flex-col items-center text-center lg:items-start lg:text-left mt-4 sm:mt-0" data-cursor="view">
+            <h2 className="text-gold tracking-[0.2em] uppercase text-xs sm:text-sm font-bold mb-4 bg-ivory/50 dark:bg-charcoal/50 backdrop-blur-md px-5 py-1.5 rounded-full border border-black/5 dark:border-white/5 inline-block shadow-sm">
               {t("heroTagline")}
             </h2>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-sans font-bold leading-tight tracking-tighter mb-6 text-charcoal dark:text-ivory drop-shadow-sm whitespace-pre-line">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-sans font-bold leading-tight tracking-tighter mb-4 sm:mb-6 text-charcoal dark:text-ivory drop-shadow-sm whitespace-pre-line">
               {t("heroName")}
             </h1>
-            <p className="text-lg md:text-xl opacity-90 mb-10 max-w-md leading-relaxed border-l-2 border-forest-green pl-6 font-medium bg-ivory/30 dark:bg-charcoal/30 backdrop-blur-sm py-2">
+            <div className="w-16 h-1 bg-gold rounded-full mb-6 lg:hidden"></div>
+            <p className="text-base sm:text-lg md:text-xl opacity-90 mb-8 sm:mb-10 max-w-md leading-relaxed lg:border-l-2 border-forest-green lg:pl-4 sm:pl-6 font-medium bg-ivory/30 dark:bg-charcoal/30 backdrop-blur-sm py-2 px-4 lg:px-0 rounded-xl lg:rounded-none">
               {t("heroDesc")}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <PremiumButton href="/public-service" variant="primary">
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-2">
+              <PremiumButton href="/public-service" variant="primary" className="w-full sm:w-auto justify-center flex">
                 {t("explorePublicService")}
               </PremiumButton>
-              <PremiumButton href="/contact" variant="outline" className="bg-ivory/50 dark:bg-charcoal/50 backdrop-blur-md border-transparent hover:border-charcoal dark:hover:border-ivory">
+              <PremiumButton href="/contact" variant="outline" className="w-full sm:w-auto justify-center flex bg-ivory/50 dark:bg-charcoal/50 backdrop-blur-md border-transparent hover:border-charcoal dark:hover:border-ivory">
                 {t("connectWithOffice")}
               </PremiumButton>
             </div>
           </div>
           
           {/* Stunning Framed Portrait */}
-          <div className="w-full lg:w-[45%] h-[60vh] lg:h-[75vh] max-h-[800px] flex items-center justify-center relative mt-8 lg:mt-0 z-10">
-            <div className="relative w-full h-full max-w-md group perspective-1000">
+          <div className="w-full lg:w-[45%] h-[45vh] sm:h-[50vh] lg:h-[75vh] max-h-[800px] flex items-center justify-center relative mt-6 sm:mt-8 lg:mt-0 z-10 pb-12 lg:pb-0">
+            <div className="relative w-full h-full max-w-[280px] sm:max-w-md group perspective-1000">
               {/* Outer Glow / Halo Effect */}
-              <div className="absolute -inset-6 rounded-3xl bg-forest-green/20 dark:bg-gold/20 blur-3xl transition-all duration-700 group-hover:bg-forest-green/30 dark:group-hover:bg-gold/30 group-hover:blur-2xl"></div>
+              <div className="absolute -inset-4 sm:-inset-6 rounded-3xl bg-forest-green/30 dark:bg-gold/30 blur-2xl sm:blur-3xl transition-all duration-700 group-hover:bg-forest-green/40 dark:group-hover:bg-gold/40 group-hover:blur-3xl"></div>
               
               {/* Premium Bordered Frame */}
-              <div className="relative w-full h-full rounded-[2rem] overflow-hidden border-4 border-forest-green/30 dark:border-gold/40 shadow-2xl bg-charcoal/5 dark:bg-ivory/5 transform transition-transform duration-700 group-hover:scale-[1.02]">
+              <div className="relative w-full h-full rounded-[2rem] overflow-hidden border-[6px] border-white dark:border-charcoal-light shadow-2xl bg-charcoal/5 dark:bg-ivory/5 transform transition-transform duration-700 group-hover:scale-[1.02]">
                 <Image 
                   src="/mla-portrait-1.jpeg" 
                   alt="Adv. CV Santhakumar MLA" 
@@ -68,7 +77,7 @@ export default function Home() {
       </section>
 
       {/* About Preview */}
-      <section className="py-32 bg-ivory dark:bg-charcoal">
+      <section className="py-20 lg:py-32 bg-ivory dark:bg-charcoal">
         <div className="container mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-16">
           <div className="w-full md:w-5/12">
             <h2 className="text-3xl md:text-5xl font-bold mb-8 whitespace-pre-line">{t("aboutTitle")}</h2>
@@ -126,7 +135,7 @@ export default function Home() {
       </section>
 
       {/* Key Interventions */}
-      <section className="py-32 bg-background border-t border-charcoal/5 dark:border-ivory/5">
+      <section className="py-20 lg:py-32 bg-background border-t border-charcoal/5 dark:border-ivory/5">
         <div className="container mx-auto px-6 md:px-12">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-forest-green/20 dark:border-gold/20 bg-forest-green/5 dark:bg-gold/5 px-4 py-1.5 text-[10px] font-bold tracking-[0.22em] uppercase text-forest-green dark:text-gold">
@@ -156,7 +165,7 @@ export default function Home() {
       </section>
 
       {/* Citizen Connect Hub */}
-      <section className="py-32 bg-neutral-warm dark:bg-charcoal-light">
+      <section className="py-20 lg:py-32 bg-neutral-warm dark:bg-charcoal-light">
         <div className="container mx-auto px-6 md:px-12 text-center max-w-4xl">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("yourVoiceMatters")}</h2>
           <p className="opacity-80 text-lg mb-16">{t("voiceDesc")}</p>

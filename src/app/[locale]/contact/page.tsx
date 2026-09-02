@@ -32,7 +32,7 @@ export default function Contact() {
                   Pathanamthitta District<br />
                   Kerala, India
                 </p>
-                <PremiumButton variant="outline" className="mt-4 px-6 py-2 text-xs">
+                <PremiumButton href="https://maps.app.goo.gl/vcfkwGuaHh5koDCfA?g_st=aw" variant="outline" className="mt-4 px-6 py-2 text-xs">
                   Get Directions
                 </PremiumButton>
               </div>
@@ -48,10 +48,10 @@ export default function Contact() {
                   +91 94475 04529
                 </p>
                 <div className="flex gap-4">
-                  <PremiumButton variant="primary" className="px-6 py-2 text-xs">
+                  <PremiumButton href="tel:+919447504529" variant="primary" className="px-6 py-2 text-xs">
                     Call Office
                   </PremiumButton>
-                  <PremiumButton variant="secondary" className="px-6 py-2 text-xs bg-[#25D366] text-white hover:bg-[#128C7E]">
+                  <PremiumButton href="https://wa.me/919447504529" variant="secondary" className="px-6 py-2 text-xs bg-[#25D366] text-white hover:bg-[#128C7E]">
                     <MessageCircle size={16} /> WhatsApp
                   </PremiumButton>
                 </div>
@@ -67,7 +67,7 @@ export default function Contact() {
                 <p className="opacity-80 leading-relaxed mb-4">
                   cvsanthakumar@niyamasabha.nic.in
                 </p>
-                <PremiumButton variant="outline" className="px-6 py-2 text-xs">
+                <PremiumButton href="mailto:cvsanthakumar@niyamasabha.nic.in" variant="outline" className="px-6 py-2 text-xs">
                   Email Office
                 </PremiumButton>
               </div>

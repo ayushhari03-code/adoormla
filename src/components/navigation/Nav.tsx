@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, Mail } from "lucide-react";
 
 export default function Nav() {
@@ -32,9 +31,10 @@ export default function Nav() {
   };
 
   return (
-    <header className="w-full z-50 flex flex-col bg-background/95 backdrop-blur-xl shadow-sm border-b border-charcoal/5 dark:border-ivory/5 sticky top-0 transition-colors">
-      
-      {/* Tier 1: Top Bar */}
+    <>
+      <header className="w-full z-50 flex flex-col bg-background/95 backdrop-blur-xl shadow-sm border-b border-charcoal/5 dark:border-ivory/5 sticky top-0 transition-colors">
+        
+        {/* Tier 1: Top Bar */}
       <div className="bg-forest-green text-white text-[11px] py-1.5 hidden sm:block">
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
           <span className="opacity-90 tracking-wide font-medium">{t("servingPeople")}</span>
@@ -51,10 +51,10 @@ export default function Nav() {
       
       {/* Tier 2: Main Logo Bar */}
       <div className="bg-background transition-colors">
-        <div className="container mx-auto px-6 md:px-12 grid grid-cols-[auto_1fr_auto] items-center gap-4 py-3 md:py-4">
+        <div className="container mx-auto px-6 md:px-12 flex justify-between items-center gap-4 py-3 md:py-4">
           
           {/* Logo Area */}
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group shrink-0">
             <div className="w-11 h-11 md:w-14 md:h-14 bg-forest-green rounded-full flex items-center justify-center text-ivory shadow-inner transform group-hover:scale-105 transition-transform">
                <span className="font-serif font-bold text-lg md:text-xl tracking-tighter">CV</span>
             </div>
@@ -66,7 +66,7 @@ export default function Nav() {
           </Link>
           
           {/* Middle Pill */}
-          <div className="hidden md:flex justify-center">
+          <div className="hidden md:flex justify-center flex-1">
              <div className="flex items-center gap-3 rounded-xl border border-charcoal/10 dark:border-ivory/10 bg-charcoal/5 dark:bg-ivory/5 px-3 py-2 hover:bg-charcoal/10 dark:hover:bg-ivory/10 transition-colors">
                 <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gold/60 relative shrink-0">
                   <Image src="/mla-portrait-2.jpeg" alt="Adv. CV Santhakumar" fill className="object-cover" />
@@ -79,10 +79,10 @@ export default function Nav() {
           </div>
           
           {/* Actions */}
-          <div className="flex items-center gap-3 shrink-0">
-             <div className="hidden sm:flex rounded-md border border-charcoal/10 dark:border-ivory/10 overflow-hidden text-xs font-bold">
-               <button onClick={toggleLocale} className={`px-3 py-1.5 transition-colors ${locale === 'en' ? 'bg-forest-green text-white' : 'bg-transparent hover:bg-charcoal/5 dark:hover:bg-ivory/5'}`}>EN</button>
-               <button onClick={toggleLocale} className={`px-3 py-1.5 transition-colors ${locale === 'ml' ? 'bg-forest-green text-white' : 'bg-transparent hover:bg-charcoal/5 dark:hover:bg-ivory/5'}`}>മലയാളം</button>
+          <div className="flex items-center justify-end gap-2 sm:gap-3 shrink-0">
+             <div className="flex rounded-md border border-charcoal/10 dark:border-ivory/10 overflow-hidden text-[10px] sm:text-xs font-bold">
+               <button onClick={toggleLocale} className={`px-2 sm:px-3 py-1.5 transition-colors ${locale === 'en' ? 'bg-forest-green text-white' : 'bg-transparent hover:bg-charcoal/5 dark:hover:bg-ivory/5'}`}>EN</button>
+               <button onClick={toggleLocale} className={`px-2 sm:px-3 py-1.5 transition-colors ${locale === 'ml' ? 'bg-forest-green text-white' : 'bg-transparent hover:bg-charcoal/5 dark:hover:bg-ivory/5'}`}>മലയാളം</button>
              </div>
              <Link href="/public-service" className="hidden lg:inline-flex items-center rounded-md bg-forest-green px-5 py-2.5 text-sm font-bold text-white hover:bg-forest-green/90 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
                {t("publicServiceHub")}
@@ -90,8 +90,12 @@ export default function Nav() {
              
              {/* Mobile Menu Toggle */}
              <button
-               className="lg:hidden p-2 border border-charcoal/10 dark:border-ivory/10 rounded-md bg-charcoal/5 dark:bg-ivory/5 text-foreground"
-               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+               type="button"
+               className="relative z-50 lg:hidden p-2 border border-forest-green/20 rounded-md bg-forest-green text-white shadow-md cursor-pointer active:scale-95 transition-transform"
+               onClick={() => {
+                 console.log("Menu toggled: ", !mobileMenuOpen);
+                 setMobileMenuOpen(!mobileMenuOpen);
+               }}
              >
                {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
              </button>
@@ -122,47 +126,55 @@ export default function Nav() {
            })}
         </div>
       </nav>
+    </header>
 
-      {/* Mobile Navigation Dropdown */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden w-full bg-background border-t border-charcoal/10 dark:border-ivory/10 overflow-hidden"
-          >
-            <div className="flex flex-col p-6 gap-4">
-              {links.map((link) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className={`text-lg font-bold uppercase border-b border-charcoal/5 dark:border-ivory/5 pb-3 ${isActive ? 'text-forest-green dark:text-gold' : 'text-foreground'}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
-                );
-              })}
-              <div className="flex items-center gap-4 mt-2">
-                <button onClick={toggleLocale} className="flex-1 bg-charcoal/5 dark:bg-ivory/5 py-3 rounded-lg font-bold text-sm">
-                  {t("switchLang")}
+      {/* Mobile Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-[100]">
+          <div 
+            onClick={() => setMobileMenuOpen(false)}
+            className="absolute inset-0 bg-charcoal/60 dark:bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+          />
+          <div className="absolute top-0 right-0 bottom-0 w-[85vw] max-w-[400px] bg-background shadow-2xl flex flex-col border-l border-charcoal/5 dark:border-ivory/5 animate-in slide-in-from-right duration-300">
+            <div className="p-5 flex items-center justify-between border-b border-charcoal/5 dark:border-ivory/5">
+                <span className="font-bold text-lg tracking-tight">{t("adoorSparsham") || "Menu"}</span>
+                <button 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 bg-charcoal/5 dark:bg-ivory/5 rounded-full hover:bg-charcoal/10 dark:hover:bg-ivory/10 transition-colors text-foreground"
+                >
+                  <X size={20} />
                 </button>
               </div>
-              <Link 
-                href="/public-service" 
-                className="mt-2 bg-forest-green text-white text-center py-4 rounded-lg font-bold uppercase tracking-wider"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {t("publicServiceHub")}
-              </Link>
+              <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-2">
+                {links.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={`text-base font-bold p-3.5 rounded-xl transition-colors ${isActive ? 'bg-forest-green/10 dark:bg-gold/10 text-forest-green dark:text-gold' : 'text-foreground hover:bg-charcoal/5 dark:hover:bg-ivory/5'}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                })}
+              </div>
+              <div className="p-5 border-t border-charcoal/5 dark:border-ivory/5 flex flex-col gap-4 bg-charcoal/[0.02] dark:bg-ivory/[0.02]">
+                <button onClick={toggleLocale} className="w-full bg-charcoal/5 dark:bg-ivory/5 py-3.5 rounded-xl font-bold text-sm hover:bg-charcoal/10 dark:hover:bg-ivory/10 transition-colors">
+                  {t("switchLang")}
+                </button>
+                <Link 
+                  href="/public-service" 
+                  className="w-full bg-forest-green text-white text-center py-4 rounded-xl font-bold uppercase tracking-wider shadow-md"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {t("publicServiceHub")}
+                </Link>
+              </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-    </header>
+          </div>
+      )}
+    </>
   );
 }

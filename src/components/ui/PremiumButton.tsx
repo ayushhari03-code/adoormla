@@ -59,7 +59,14 @@ export default function PremiumButton({
   );
 
   if (href) {
-    return <Link href={href}>{buttonContent}</Link>;
+    if (href.startsWith("http") || href.startsWith("tel:") || href.startsWith("mailto:")) {
+      return (
+        <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer">
+          {buttonContent}
+        </a>
+      );
+    }
+    return <Link href={href as any}>{buttonContent}</Link>;
   }
 
   return <button onClick={onClick} className="focus:outline-none">{buttonContent}</button>;
