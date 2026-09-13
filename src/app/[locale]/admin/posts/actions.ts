@@ -34,8 +34,8 @@ export async function createPost(formData: FormData) {
     .select()
 
   if (error) {
-    console.error('Error creating post:', error)
-    return { error: error.message }
+    console.error('Error creating post:', error);
+    throw new Error(error.message);
   }
 
   revalidatePath(`/${locale}/admin/posts`)
@@ -72,8 +72,8 @@ export async function updatePost(formData: FormData) {
     .eq('id', id)
 
   if (error) {
-    console.error('Error updating post:', error)
-    return { error: error.message }
+    console.error('Error updating post:', error);
+    throw new Error(error.message);
   }
 
   revalidatePath(`/${locale}/admin/posts`)

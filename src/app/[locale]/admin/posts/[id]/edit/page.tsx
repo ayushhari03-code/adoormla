@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import PostForm from '../_components/PostForm';
+import PostForm from '../../_components/PostForm';
 
 export default async function EditPostPage({
   params,
