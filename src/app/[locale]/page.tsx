@@ -2,11 +2,17 @@ import HeroScene from "@/components/three/HeroScene";
 import PremiumButton from "@/components/ui/PremiumButton";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
-import { ArrowRight, MessageSquare, Briefcase, Users, FileText, Vote, Landmark, Quote, Award, Megaphone, Flag } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { ArrowRight, MessageSquare, Briefcase, Users, FileText, Vote, Landmark, Quote, Award, Megaphone, Flag, Sparkles, Moon, Star, HeartPulse } from "lucide-react";
+import { setRequestLocale, getTranslations } from "next-intl/server";
+import { getActiveTheme } from "@/lib/theme";
 
-export default function Home() {
-  const t = useTranslations("Home");
+export default async function Home(props: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await props.params;
+  setRequestLocale(locale);
+  const t = await getTranslations("Home");
+  const theme = await getActiveTheme();
 
   return (
     <div className="w-full relative">
@@ -26,11 +32,44 @@ export default function Home() {
         {/* 3D Scene */}
         <HeroScene />
         
+        {/* Festive Background Decorations */}
+        {theme === 'onam' && (
+          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden flex justify-center items-center opacity-10">
+            <div className="w-[800px] h-[800px] rounded-full border-[40px] border-dashed border-amber-500 animate-[spin_60s_linear_infinite]" />
+            <div className="absolute w-[600px] h-[600px] rounded-full border-[30px] border-dotted border-red-500 animate-[spin_40s_linear_infinite_reverse]" />
+            <div className="absolute w-[400px] h-[400px] rounded-full border-[20px] border-dashed border-green-500 animate-[spin_30s_linear_infinite]" />
+          </div>
+        )}
+        
+        {theme === 'christmas' && (
+          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+             {Array.from({length: 20}).map((_, i) => (
+               <Star key={i} className="absolute text-yellow-300/20 animate-pulse" 
+                     style={{ top: `${(i * 17) % 88 + 5}%`, left: `${(i * 23) % 88 + 5}%`, width: `${(i % 5) * 6 + 14}px` }} />
+             ))}
+          </div>
+        )}
+        
+        {theme === 'eid' && (
+          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+             {Array.from({length: 10}).map((_, i) => (
+               <Moon key={i} className="absolute text-emerald-500/10" 
+                     style={{ top: `${(i * 19) % 85 + 5}%`, left: `${(i * 31) % 85 + 5}%`, width: `${(i % 4) * 8 + 24}px`, transform: `rotate(${i * 36}deg)` }} />
+             ))}
+          </div>
+        )}
+
         {/* Content & Framed Portrait Grid */}
         <div className="container mx-auto px-6 md:px-12 relative z-10 flex flex-col lg:flex-row items-center justify-between w-full h-full pt-2 lg:pt-20 gap-8 lg:gap-12 mt-4 lg:mt-0">
           
           {/* Text Content */}
           <div className="w-full lg:w-[50%] flex flex-col items-center text-center lg:items-start lg:text-left mt-4 sm:mt-0" data-cursor="view">
+            
+            {/* Festive Greetings */}
+            {theme === 'onam' && <h3 className="text-2xl md:text-4xl font-malayalam font-bold text-amber-600 mb-2 animate-bounce">ഹൃദയം നിറഞ്ഞ ഓണാശംസകൾ</h3>}
+            {theme === 'christmas' && <h3 className="text-2xl md:text-4xl font-malayalam font-bold text-red-600 mb-2 animate-bounce">ക്രിസ്മസ് ആശംസകൾ</h3>}
+            {theme === 'eid' && <h3 className="text-2xl md:text-4xl font-malayalam font-bold text-emerald-600 mb-2 animate-bounce">ഈദ് മുബാറക്</h3>}
+
             <h2 className="text-gold tracking-[0.2em] uppercase text-xs sm:text-sm font-bold mb-4 bg-ivory/50 dark:bg-charcoal/50 backdrop-blur-md px-5 py-1.5 rounded-full border border-black/5 dark:border-white/5 inline-block shadow-sm">
               {t("heroTagline")}
             </h2>

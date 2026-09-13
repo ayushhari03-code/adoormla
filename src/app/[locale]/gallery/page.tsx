@@ -1,23 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play } from "lucide-react";
 import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
 
-const categories = ["All", "Events", "Constituency", "Legislature", "Videos"];
-
-const mediaItems = [
-  { id: 1, type: "image", category: "Events", src: "/mla-new-1.jpg" },
-  { id: 2, type: "image", category: "Constituency", src: "/mla-new-2.jpg" },
-  { id: 3, type: "video", category: "Videos", thumbnail: "/mla-portrait-1.jpeg" },
-  { id: 4, type: "image", category: "Legislature", src: "/mla-portrait-2.jpeg" },
-  { id: 5, type: "image", category: "Events", src: "/mla-portrait-1.jpeg" },
-  { id: 6, type: "image", category: "Constituency", src: "/mla-portrait-2.jpeg" },
-];
+const categories = ["All", "Events", "Constituency", "Legislature", "Videos", "Gallery"];
 
 export default function Gallery() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [mediaItems, setMediaItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchGallery() {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from('gallery')
+        .select('*')
+        .eq('published', true)
+        .order('display_order', { ascending: true })
+        .order('created_at', { ascending: false });
+      
+      if (data) {
+        setMediaItems(data.map(item => ({
+          ...item,
+          type: item.image_url.includes('.mp4') ? 'video' : 'image',
+          src: item.image_url,
+          thumbnail: item.image_url // Simplified for demo
+        })));
+      }
+      setLoading(false);
+    }
+    
+    fetchGallery();
+  }, []);
 
   const filteredItems = mediaItems.filter(item => 
     activeCategory === "All" || item.category === activeCategory
@@ -50,45 +68,54 @@ export default function Gallery() {
           ))}
         </div>
 
-        {/* Masonry Grid */}
-        <motion.div layout className="columns-1 sm:columns-2 md:columns-3 gap-6 space-y-6">
-          <AnimatePresence>
-            {filteredItems.map((item) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                className="relative overflow-hidden rounded-3xl break-inside-avoid group cursor-pointer"
-                data-cursor={item.type === "video" ? "play" : "view"}
-              >
-                <div className="relative w-full pb-[120%] bg-ivory/5">
-                  <Image 
-                    src={item.type === "image" ? (item.src as string) : (item.thumbnail as string)} 
-                    alt={`Gallery ${item.id}`} 
-                    fill 
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
-                  {item.type === "video" && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-gold/90 text-charcoal flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform">
-                        <Play fill="currentColor" size={24} className="ml-1" />
+        {loading ? (
+          <div className="text-center opacity-50 py-24">Loading gallery...</div>
+        ) : (
+          <motion.div layout className="columns-1 sm:columns-2 md:columns-3 gap-6 space-y-6">
+            <AnimatePresence>
+              {filteredItems.map((item) => (
+                <motion.div
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                  className="relative overflow-hidden rounded-3xl break-inside-avoid group cursor-pointer"
+                  data-cursor={item.type === "video" ? "play" : "view"}
+                >
+                  <div className="relative w-full pb-[120%] bg-ivory/5">
+                    <Image 
+                      src={item.type === "image" ? (item.src as string) : (item.thumbnail as string)} 
+                      alt={item.title || `Gallery ${item.id}`} 
+                      fill 
+                      unoptimized
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    
+                    {item.type === "video" && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-16 h-16 rounded-full bg-gold/90 text-charcoal flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform">
+                          <Play fill="currentColor" size={24} className="ml-1" />
+                        </div>
                       </div>
+                    )}
+                    
+                    <div className="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
+                      <span className="text-xs font-bold uppercase tracking-widest text-gold mb-2 block">{item.category}</span>
+                      {item.title && <p className="font-bold text-sm">{item.title}</p>}
                     </div>
-                  )}
-                  
-                  <div className="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0">
-                    <span className="text-xs font-bold uppercase tracking-widest text-gold mb-2 block">{item.category}</span>
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
+        
+        {!loading && filteredItems.length === 0 && (
+          <div className="text-center opacity-50 py-24">No media available in this category.</div>
+        )}
       </div>
     </div>
   );

@@ -57,17 +57,24 @@ export default function About() {
           <h1 className="text-5xl md:text-7xl font-sans font-bold leading-tight tracking-tighter mb-8 text-charcoal dark:text-ivory whitespace-pre-line">
             {t("title")}
           </h1>
-          <div className="flex flex-col md:flex-row items-center gap-12 mt-12 mb-16 max-w-5xl mx-auto text-left">
-            <div className="w-full md:w-1/3 aspect-square relative rounded-3xl overflow-hidden shadow-xl border-4 border-ivory dark:border-charcoal-light">
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-14 mt-12 mb-16 max-w-5xl mx-auto text-left bg-charcoal/[0.02] dark:bg-ivory/[0.02] p-6 sm:p-8 md:p-10 rounded-3xl border border-charcoal/10 dark:border-ivory/10 shadow-xl backdrop-blur-sm">
+            <div className="w-full md:w-5/12 aspect-[4/5] sm:aspect-square md:aspect-[4/5] relative rounded-2xl overflow-hidden shadow-2xl border-2 border-ivory/80 dark:border-charcoal-light shrink-0">
               <Image 
-                src="/mla-new-2.jpg" 
+                src="/mla-about.jpeg" 
                 alt="Adv. CV Santhakumar MLA" 
                 fill
-                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 400px"
+                priority
+                className="object-cover object-[50%_15%] hover:scale-105 transition-transform duration-500"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent pointer-events-none" />
             </div>
-            <div className="w-full md:w-2/3">
-              <p className="text-xl opacity-80 leading-relaxed">
+            <div className="w-full md:w-7/12 flex flex-col justify-center space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest-green/10 dark:bg-gold/10 text-forest-green dark:text-gold text-xs font-bold uppercase tracking-wider w-fit">
+                <span className="w-2 h-2 rounded-full bg-forest-green dark:bg-gold animate-pulse" />
+                MLA Adoor
+              </div>
+              <p className="text-lg md:text-xl opacity-90 leading-relaxed font-sans text-charcoal dark:text-ivory">
                 {t("desc")}
               </p>
             </div>

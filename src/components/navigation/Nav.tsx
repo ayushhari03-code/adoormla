@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
-import { Menu, X, Phone, Mail } from "lucide-react";
+import { Menu, X, Phone, Mail, HeartPulse } from "lucide-react";
 
 export default function Nav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -55,8 +55,15 @@ export default function Nav() {
           
           {/* Logo Area */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="w-11 h-11 md:w-14 md:h-14 bg-forest-green rounded-full flex items-center justify-center text-ivory shadow-inner transform group-hover:scale-105 transition-transform">
-               <span className="font-serif font-bold text-lg md:text-xl tracking-tighter">CV</span>
+            <div className="w-11 h-11 md:w-14 md:h-14 rounded-full overflow-hidden relative shadow-md border-2 border-forest-green/20 dark:border-gold/30 bg-white dark:bg-charcoal transform group-hover:scale-105 transition-transform shrink-0">
+               <Image
+                 src="/logo-circle.png"
+                 alt="Adoor Sparsham Logo"
+                 fill
+                 sizes="(max-width: 768px) 44px, 56px"
+                 priority
+                 className="object-contain p-0.5"
+               />
             </div>
             <div className="leading-tight border-l-2 border-forest-green/20 pl-3">
               <div className="text-[10px] uppercase tracking-[0.18em] text-forest-green dark:text-gold font-bold">{t("portalForPeoples")}</div>
@@ -80,9 +87,23 @@ export default function Nav() {
           
           {/* Actions */}
           <div className="flex items-center justify-end gap-2 sm:gap-3 shrink-0">
+             {/* Minimal Top Right Corner Hospital Help Pill */}
+             <Link
+               href="/adoor#hospitals"
+               className="group inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full border border-red-500/25 dark:border-red-400/30 bg-red-500/[0.06] hover:bg-red-500/15 text-red-600 dark:text-red-400 text-[11px] sm:text-xs font-bold transition-all duration-200 active:scale-95 shadow-sm"
+               title={locale === 'ml' ? 'അടൂരിലെ ആശുപത്രികൾ' : 'Adoor Hospitals & Emergency'}
+             >
+               <span className="relative flex h-2 w-2">
+                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-60"></span>
+                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+               </span>
+               <HeartPulse size={13} className="text-red-500 group-hover:scale-110 transition-transform" />
+               <span className="hidden sm:inline">{locale === 'ml' ? 'ആശുപത്രികൾ' : 'Hospitals'}</span>
+             </Link>
+
              <div className="flex rounded-md border border-charcoal/10 dark:border-ivory/10 overflow-hidden text-[10px] sm:text-xs font-bold">
-               <button onClick={toggleLocale} className={`px-2 sm:px-3 py-1.5 transition-colors ${locale === 'en' ? 'bg-forest-green text-white' : 'bg-transparent hover:bg-charcoal/5 dark:hover:bg-ivory/5'}`}>EN</button>
-               <button onClick={toggleLocale} className={`px-2 sm:px-3 py-1.5 transition-colors ${locale === 'ml' ? 'bg-forest-green text-white' : 'bg-transparent hover:bg-charcoal/5 dark:hover:bg-ivory/5'}`}>മലയാളം</button>
+               <button type="button" suppressHydrationWarning onClick={toggleLocale} className={`px-2 sm:px-3 py-1.5 transition-colors ${locale === 'en' ? 'bg-forest-green text-white' : 'bg-transparent hover:bg-charcoal/5 dark:hover:bg-ivory/5'}`}>EN</button>
+               <button type="button" suppressHydrationWarning onClick={toggleLocale} className={`px-2 sm:px-3 py-1.5 transition-colors ${locale === 'ml' ? 'bg-forest-green text-white' : 'bg-transparent hover:bg-charcoal/5 dark:hover:bg-ivory/5'}`}>മലയാളം</button>
              </div>
              <Link href="/public-service" className="hidden lg:inline-flex items-center rounded-md bg-forest-green px-5 py-2.5 text-sm font-bold text-white hover:bg-forest-green/90 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
                {t("publicServiceHub")}
