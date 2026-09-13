@@ -9,22 +9,29 @@ export default async function AdminDashboard({
 }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
-  const supabase = await createClient();
+  let postsCount = 0;
+  let publishedPostsCount = 0;
+  let eventsCount = 0;
+  let projectsCount = 0;
+  let galleryCount = 0;
 
-  // Fetch counts
-  const [
-    { count: postsCount },
-    { count: publishedPostsCount },
-    { count: eventsCount },
-    { count: projectsCount },
-    { count: galleryCount }
-  ] = await Promise.all([
-    supabase.from('posts').select('*', { count: 'exact', head: true }),
-    supabase.from('posts').select('*', { count: 'exact', head: true }).eq('published', true),
-    supabase.from('events').select('*', { count: 'exact', head: true }),
-    supabase.from('projects').select('*', { count: 'exact', head: true }),
-    supabase.from('gallery').select('*', { count: 'exact', head: true })
-  ]);
+  try {
+    const supabase = await createClient();
+    const [p, pb, e, pr, g] = await Promise.all([
+      supabase.from('posts').select('*', { count: 'exact', head: true }),
+      supabase.from('posts').select('*', { count: 'exact', head: true }).eq('published', true),
+      supabase.from('events').select('*', { count: 'exact', head: true }),
+      supabase.from('projects').select('*', { count: 'exact', head: true }),
+      supabase.from('gallery').select('*', { count: 'exact', head: true })
+    ]);
+    postsCount = p.count || 0;
+    publishedPostsCount = pb.count || 0;
+    eventsCount = e.count || 0;
+    projectsCount = pr.count || 0;
+    galleryCount = g.count || 0;
+  } catch (err) {
+    console.error('Error fetching dashboard stats:', err);
+  }
 
   const stats = [
     { 

@@ -22,8 +22,14 @@ export default async function AdminLayout({
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
   
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    user = data?.user || null;
+  } catch (err) {
+    console.error('Auth error in AdminLayout:', err);
+  }
 
   if (!user) {
     // If not authenticated, we don't render the admin sidebar.
