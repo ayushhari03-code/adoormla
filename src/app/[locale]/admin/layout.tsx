@@ -1,7 +1,7 @@
 import { Link } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { LogOut, LayoutDashboard, FileText, Calendar, Briefcase, Image as ImageIcon, Settings, Palette } from 'lucide-react';
+import { LogOut, LayoutDashboard, FileText, Calendar, Briefcase, Image as ImageIcon, Settings, Palette, Inbox } from 'lucide-react';
 import { revalidatePath } from 'next/cache';
 
 async function signOut() {
@@ -44,6 +44,7 @@ export default async function AdminLayout({
 
   const navItems = [
     { label: 'Dashboard', href: `/admin`, icon: LayoutDashboard },
+    { label: 'Citizen Requests', href: `/admin/requests`, icon: Inbox },
     { label: 'Posts', href: `/admin/posts`, icon: FileText },
     { label: 'Events', href: `/admin/events`, icon: Calendar },
     { label: 'Projects', href: `/admin/projects`, icon: Briefcase },

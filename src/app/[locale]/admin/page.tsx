@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import { FileText, Calendar, Briefcase, Image as ImageIcon, Settings } from 'lucide-react';
+import { FileText, Calendar, Briefcase, Image as ImageIcon, Settings, Inbox } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 
 export default async function AdminDashboard({
@@ -14,26 +14,40 @@ export default async function AdminDashboard({
   let eventsCount = 0;
   let projectsCount = 0;
   let galleryCount = 0;
+  let requestsCount = 0;
+  let newRequestsCount = 0;
 
   try {
     const supabase = await createClient();
-    const [p, pb, e, pr, g] = await Promise.all([
+    const [p, pb, e, pr, g, req, reqNew] = await Promise.all([
       supabase.from('posts').select('*', { count: 'exact', head: true }),
       supabase.from('posts').select('*', { count: 'exact', head: true }).eq('published', true),
       supabase.from('events').select('*', { count: 'exact', head: true }),
       supabase.from('projects').select('*', { count: 'exact', head: true }),
-      supabase.from('gallery').select('*', { count: 'exact', head: true })
+      supabase.from('gallery').select('*', { count: 'exact', head: true }),
+      supabase.from('citizen_requests').select('*', { count: 'exact', head: true }),
+      supabase.from('citizen_requests').select('*', { count: 'exact', head: true }).eq('status', 'submitted'),
     ]);
     postsCount = p.count || 0;
     publishedPostsCount = pb.count || 0;
     eventsCount = e.count || 0;
     projectsCount = pr.count || 0;
     galleryCount = g.count || 0;
+    requestsCount = req.count || 0;
+    newRequestsCount = reqNew.count || 0;
   } catch (err) {
     console.error('Error fetching dashboard stats:', err);
   }
 
   const stats = [
+    { 
+      label: 'Citizen Requests', 
+      value: requestsCount || 0, 
+      sub: `${newRequestsCount || 0} new / unread`,
+      icon: Inbox,
+      href: `/admin/requests`,
+      highlight: newRequestsCount > 0
+    },
     { 
       label: 'Total Posts', 
       value: postsCount || 0, 
@@ -92,6 +106,15 @@ export default async function AdminDashboard({
         <div className="bg-ivory dark:bg-charcoal-light p-8 rounded-3xl border border-black/5 dark:border-white/5">
           <h2 className="text-xl font-bold mb-6">Quick Actions</h2>
           <div className="space-y-3">
+            <Link href={`/admin/requests`} className="flex items-center gap-3 p-4 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+              <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center text-gold">
+                <Inbox size={18} />
+              </div>
+              <div>
+                <p className="font-bold">Review citizen requests</p>
+                <p className="text-sm opacity-70">Check grievances & submissions</p>
+              </div>
+            </Link>
             <Link href={`/admin/posts/new`} className="flex items-center gap-3 p-4 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
               <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center text-gold">
                 <FileText size={18} />
