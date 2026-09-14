@@ -135,7 +135,7 @@ export default function PublicService() {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("citizen_requests")
-        .select("tracking_id, type, panchayat, status, created_at, updated_at")
+        .select("tracking_id, type, name, panchayat, details, status, created_at, updated_at")
         .eq("tracking_id", cleanId)
         .maybeSingle();
 
@@ -284,7 +284,7 @@ export default function PublicService() {
 
                 {trackedResult && (
                   <div className="p-6 rounded-2xl bg-charcoal/5 dark:bg-white/5 border border-black/5 dark:border-white/5 animate-in zoom-in-95 duration-200">
-                    <div className="flex justify-between items-start border-b border-black/10 dark:border-white/10 pb-4 mb-6">
+                    <div className="flex justify-between items-start border-b border-black/10 dark:border-white/10 pb-4 mb-4">
                       <div>
                         <span className="text-xs uppercase font-bold tracking-wider opacity-60">
                           {t("referenceId")}
@@ -297,6 +297,56 @@ export default function PublicService() {
                         <span className="text-xs uppercase font-bold tracking-wider opacity-60">Category</span>
                         <p className="text-sm font-bold capitalize mt-0.5">{trackedResult.type}</p>
                       </div>
+                    </div>
+
+                    {/* Citizen Name, Date & Submission Details */}
+                    <div className="bg-charcoal/5 dark:bg-white/5 rounded-2xl p-4 mb-6 border border-black/5 dark:border-white/5 space-y-3">
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <span className="font-bold opacity-60 uppercase tracking-wider block">
+                            {t("trackedCitizenName")}
+                          </span>
+                          <span className="font-bold text-sm text-charcoal dark:text-ivory mt-0.5 block">
+                            {trackedResult.name || "Citizen"}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-bold opacity-60 uppercase tracking-wider block">
+                            {t("trackedDate")}
+                          </span>
+                          <span className="font-medium text-charcoal dark:text-ivory mt-0.5 block">
+                            {new Date(trackedResult.created_at).toLocaleDateString('en-IN', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                      </div>
+
+                      {trackedResult.panchayat && (
+                        <div className="text-xs pt-2 border-t border-black/5 dark:border-white/5 flex justify-between items-center">
+                          <span className="font-bold opacity-60 uppercase tracking-wider">
+                            {t("trackedLocation")}:
+                          </span>
+                          <span className="font-semibold text-charcoal dark:text-ivory">
+                            {trackedResult.panchayat}
+                          </span>
+                        </div>
+                      )}
+
+                      {trackedResult.details && (
+                        <div className="text-xs pt-2 border-t border-black/5 dark:border-white/5">
+                          <span className="font-bold opacity-60 uppercase tracking-wider block mb-1">
+                            {t("trackedSummary")}:
+                          </span>
+                          <p className="opacity-80 italic bg-black/[0.02] dark:bg-white/[0.02] p-2.5 rounded-xl text-xs leading-relaxed line-clamp-3">
+                            "{trackedResult.details}"
+                          </p>
+                        </div>
+                      )}
                     </div>
 
                     {/* Progress Timeline */}

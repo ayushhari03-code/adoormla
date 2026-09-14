@@ -30,6 +30,7 @@ export type TrackedCitizenRequest = {
   type: string;
   name?: string;
   panchayat: string;
+  details?: string;
   status: 'submitted' | 'viewed' | 'under_process' | 'resolved' | 'rejected' | string;
   created_at: string;
   updated_at?: string;
@@ -98,7 +99,7 @@ export async function trackCitizenRequest(trackingId: string): Promise<{
 
     const { data, error } = await supabase
       .from('citizen_requests')
-      .select('tracking_id, type, panchayat, status, created_at, updated_at')
+      .select('tracking_id, type, name, panchayat, details, status, created_at, updated_at')
       .eq('tracking_id', cleanId)
       .maybeSingle();
 
