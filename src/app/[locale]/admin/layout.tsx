@@ -36,7 +36,7 @@ export default async function AdminLayout({
     // The middleware handles the actual redirect to the login page.
     // If they are on the login page, this allows it to render cleanly.
     return (
-      <div className="min-h-screen bg-charcoal/5 dark:bg-charcoal text-charcoal dark:text-ivory">
+      <div className="admin-container min-h-screen bg-charcoal/5 dark:bg-charcoal text-charcoal dark:text-ivory">
         {children}
       </div>
     );
@@ -54,7 +54,7 @@ export default async function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-charcoal/5 dark:bg-charcoal text-charcoal dark:text-ivory flex">
+    <div className="admin-container min-h-screen bg-charcoal/5 dark:bg-charcoal text-charcoal dark:text-ivory flex">
       {/* Sidebar */}
       <aside className="w-64 bg-ivory dark:bg-charcoal-light border-r border-black/5 dark:border-white/5 hidden md:flex flex-col">
         <div className="p-6 border-b border-black/5 dark:border-white/5">

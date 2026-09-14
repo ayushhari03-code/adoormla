@@ -27,7 +27,26 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
-  cursor: none; /* Custom cursor implementation */
+  cursor: none; /* Custom cursor implementation on public site */
+}
+
+/* Enable native precision cursor in admin panel and modals */
+body:has(.admin-container),
+.admin-container,
+.admin-container * {
+  cursor: auto !important;
+}
+
+.admin-container a,
+.admin-container button,
+.admin-container [role="button"] {
+  cursor: pointer !important;
+}
+
+.admin-container input,
+.admin-container textarea,
+.admin-container [contenteditable="true"] {
+  cursor: text !important;
 }
 
 @media (hover: none) and (pointer: coarse) {

@@ -429,8 +429,8 @@ ${req.admin_notes ? `\n💬 *Office Notes:* ${req.admin_notes}` : ''}
 
       {/* Detail Modal */}
       {selectedRequest && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-ivory dark:bg-charcoal border border-black/10 dark:border-white/10 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+        <div className="admin-container fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 cursor-default">
+          <div className="bg-ivory dark:bg-charcoal border border-black/10 dark:border-white/10 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200 cursor-default">
             {/* Header */}
             <div className="flex justify-between items-start border-b border-black/10 dark:border-white/10 pb-4 mb-6">
               <div>

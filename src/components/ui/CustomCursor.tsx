@@ -1,18 +1,31 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 
 export default function CustomCursor() {
+  const pathname = usePathname();
+  const isAdmin = pathname?.includes("/admin");
+
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [hoverText, setHoverText] = useState("");
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
+    // If in admin panel, restore native cursor completely
+    if (isAdmin) {
+      document.body.style.cursor = "auto";
+      return;
+    } else {
+      document.body.style.cursor = "none";
+    }
+
     // Check if it's a touch device
     if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
       setIsTouchDevice(true);
+      document.body.style.cursor = "auto";
       return;
     }
 
@@ -47,11 +60,11 @@ export default function CustomCursor() {
     };
   }, []);
 
-  if (isTouchDevice) return null;
+  if (isAdmin || isTouchDevice) return null;
 
   return (
     <motion.div
-      className="fixed top-0 left-0 z-50 pointer-events-none flex items-center justify-center rounded-full bg-forest-green-light mix-blend-difference text-ivory text-xs font-bold"
+      className="fixed top-0 left-0 z-[99999] pointer-events-none flex items-center justify-center rounded-full bg-forest-green-light mix-blend-difference text-ivory text-xs font-bold"
       animate={{
         x: mousePosition.x - (isHovering ? 32 : 8),
         y: mousePosition.y - (isHovering ? 32 : 8),
