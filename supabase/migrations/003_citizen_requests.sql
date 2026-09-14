@@ -31,6 +31,12 @@ for each row execute procedure public.handle_updated_at();
 -- ==========================================
 alter table public.citizen_requests enable row level security;
 
+-- ==========================================
+-- PERMISSIONS & ROLES
+-- ==========================================
+grant insert, select on table public.citizen_requests to anon;
+grant all on table public.citizen_requests to authenticated, service_role;
+
 -- Public/Anonymous users can INSERT their requests
 create policy "Allow public to submit citizen requests" 
 on public.citizen_requests 
