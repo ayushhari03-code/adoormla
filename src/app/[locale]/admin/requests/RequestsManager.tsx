@@ -18,7 +18,8 @@ import {
   Check, 
   X,
   Trash2,
-  Send
+  Send,
+  AlertTriangle
 } from 'lucide-react';
 import { markRequestAsViewed, updateRequestStatus, deleteCitizenRequest } from './actions';
 
@@ -50,6 +51,37 @@ export default function RequestsManager({ initialRequests }: RequestsManagerProp
   const [notesInput, setNotesInput] = useState<string>('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [mlaPhone] = useState<string>('9447504529'); // MLA Official Phone / WhatsApp
+
+  // Helper to generate formatted urgent message to MLA's WhatsApp
+  const getMlaUrgentWhatsAppUrl = (req: CitizenRequestItem) => {
+    const cleanPhone = mlaPhone.replace(/[^0-9]/g, '');
+    const fullPhone = cleanPhone.startsWith('91') ? cleanPhone : `91${cleanPhone}`;
+    const dateFormatted = new Date(req.created_at).toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+
+    const text = `🚨 *URGENT CITIZEN REQUEST - MLA ATTENTION* 🚨
+
+*Ref ID:* ${req.tracking_id}
+*Category:* ${req.type.toUpperCase()}
+*Date:* ${dateFormatted}
+
+👤 *Citizen Name:* ${req.name}
+📞 *Phone:* ${req.phone}
+📍 *Panchayat / Municipality:* ${req.panchayat}
+📌 *Status:* ${req.status.toUpperCase()}
+
+📝 *Issue / Request Details:*
+${req.details}
+${req.admin_notes ? `\n💬 *Office Notes:* ${req.admin_notes}` : ''}
+---
+*Forwarded from Adoor Constituency Digital Office*`;
+
+    return `https://wa.me/${fullPhone}?text=${encodeURIComponent(text)}`;
+  };
 
   // Copy tracking ID helper
   const handleCopy = (id: string) => {
@@ -363,6 +395,16 @@ export default function RequestsManager({ initialRequests }: RequestsManagerProp
                   </td>
                   <td className="p-4 text-right" onClick={(e) => e.stopPropagation()}>
                     <div className="inline-flex items-center gap-2">
+                      <a
+                        href={getMlaUrgentWhatsAppUrl(req)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 hover:bg-amber-500 hover:text-charcoal transition-colors"
+                        title="Send full details to MLA WhatsApp"
+                      >
+                        <AlertTriangle size={13} />
+                        <span>To MLA</span>
+                      </a>
                       <button
                         onClick={() => handleOpenDetail(req)}
                         className="px-3 py-1.5 rounded-lg text-xs font-bold bg-gold/15 text-gold hover:bg-gold hover:text-charcoal transition-colors"
@@ -460,6 +502,32 @@ export default function RequestsManager({ initialRequests }: RequestsManagerProp
                 className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#25D366] text-white font-bold text-xs uppercase tracking-wider hover:bg-[#128C7E] transition-colors"
               >
                 <Send size={16} /> WhatsApp Citizen
+              </a>
+            </div>
+
+            {/* URGENT: Forward to MLA's WhatsApp with full details */}
+            <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                  <AlertTriangle size={20} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 flex items-center gap-2">
+                    High Priority / Urgent Request?
+                  </h4>
+                  <p className="text-xs opacity-75 mt-0.5">
+                    Forward full citizen details directly to Adv. CV Santhakumar MLA's WhatsApp (+91 {mlaPhone})
+                  </p>
+                </div>
+              </div>
+
+              <a
+                href={getMlaUrgentWhatsAppUrl(selectedRequest)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#25D366] text-white font-bold text-xs uppercase tracking-wider hover:bg-[#128C7E] shadow transition-all shrink-0"
+              >
+                <Send size={15} /> Forward to MLA WhatsApp
               </a>
             </div>
 
