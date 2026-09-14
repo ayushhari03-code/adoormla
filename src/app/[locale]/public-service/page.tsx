@@ -18,6 +18,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { submitCitizenRequest, trackCitizenRequest, TrackedCitizenRequest } from "./actions";
+import { createClient } from "@/lib/supabase/client";
 import { useTranslations } from "next-intl";
 
 type ActiveTabType = "grievance" | "assistance" | "meeting" | "suggestion" | "track";
@@ -68,8 +69,46 @@ export default function PublicService() {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
-    formData.set("type", activeTab);
+    const name = (formData.get("name") as string)?.trim();
+    const phone = (formData.get("phone") as string)?.trim();
+    const panchayat = (formData.get("panchayat") as string)?.trim();
+    const details = (formData.get("details") as string)?.trim();
 
+    if (!name || !phone || !panchayat || !details) {
+      setErrorMessage("All fields are required.");
+      setFormState("error");
+      return;
+    }
+
+    try {
+      // Direct browser-to-Supabase call (ultra fast, eliminates Next.js proxy/gateway timeout)
+      const supabase = createClient();
+      const trackingId = `ADR-${Math.floor(10000 + Math.random() * 90000)}`;
+
+      const { error } = await supabase.from("citizen_requests").insert([
+        {
+          tracking_id: trackingId,
+          type: activeTab,
+          name,
+          phone,
+          panchayat,
+          details,
+          status: "submitted",
+        },
+      ]);
+
+      if (!error) {
+        setGeneratedTrackingId(trackingId);
+        setFormState("success");
+        form.reset();
+        return;
+      }
+    } catch (err) {
+      console.warn("Direct insert failed, falling back to server action:", err);
+    }
+
+    // Fallback to server action
+    formData.set("type", activeTab);
     const result = await submitCitizenRequest(formData);
 
     if (result.success && result.trackingId) {
@@ -84,13 +123,37 @@ export default function PublicService() {
 
   const handleTrackSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!trackInput.trim()) return;
+    const cleanId = trackInput.trim().toUpperCase();
+    if (!cleanId) return;
 
     setIsSearching(true);
     setTrackError("");
     setTrackedResult(null);
 
-    const result = await trackCitizenRequest(trackInput);
+    try {
+      // Direct browser-to-Supabase query
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("citizen_requests")
+        .select("tracking_id, type, panchayat, status, created_at, updated_at")
+        .eq("tracking_id", cleanId)
+        .maybeSingle();
+
+      if (data) {
+        setTrackedResult(data as TrackedCitizenRequest);
+        setIsSearching(false);
+        return;
+      } else if (!error && !data) {
+        setTrackError("No request found with this Reference ID. Please check the number and try again.");
+        setIsSearching(false);
+        return;
+      }
+    } catch (err) {
+      console.warn("Direct track lookup failed, falling back to server action:", err);
+    }
+
+    // Fallback to server action
+    const result = await trackCitizenRequest(cleanId);
 
     if (result.success && result.request) {
       setTrackedResult(result.request);

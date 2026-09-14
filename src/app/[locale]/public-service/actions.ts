@@ -1,6 +1,17 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  }
+);
 
 function generateTrackingId(): string {
   // Generate a clean, human-readable reference code like ADR-74892
@@ -26,8 +37,6 @@ export type TrackedCitizenRequest = {
 
 export async function submitCitizenRequest(formData: FormData): Promise<CitizenRequestSubmission> {
   try {
-    const supabase = await createClient();
-
     const type = (formData.get('type') as string) || 'grievance';
     const name = (formData.get('name') as string)?.trim();
     const phone = (formData.get('phone') as string)?.trim();
@@ -85,7 +94,6 @@ export async function trackCitizenRequest(trackingId: string): Promise<{
   error?: string;
 }> {
   try {
-    const supabase = await createClient();
     const cleanId = trackingId.trim().toUpperCase();
 
     const { data, error } = await supabase
