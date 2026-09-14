@@ -380,7 +380,7 @@ export default function PublicService() {
                       id="name"
                       name="name"
                       required
-                      placeholder="e.g. Ayush"
+                      placeholder="e.g. Ayush Hari"
                       className="w-full bg-transparent border-b-2 border-charcoal/20 dark:border-ivory/20 focus:border-forest-green dark:focus:border-gold py-2 outline-none transition-colors text-sm"
                     />
                   </div>
