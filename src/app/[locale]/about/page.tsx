@@ -95,10 +95,10 @@ export default function About() {
             {timelineEvents.map((item, index) => (
               <motion.div 
                 key={index}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
                 className={`relative flex flex-col md:flex-row items-start md:items-center ${
                   index % 2 === 0 ? "md:flex-row-reverse" : ""
                 }`}

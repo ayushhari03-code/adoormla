@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Noto_Sans_Malayalam } from "next/font/google";
-import {NextIntlClientProvider} from 'next-intl';
-import {getMessages, setRequestLocale} from 'next-intl/server';
-import {notFound} from 'next/navigation';
-import {routing} from '@/i18n/routing';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, setRequestLocale } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { routing } from '@/i18n/routing';
 import Nav from "@/components/navigation/Nav";
 import Footer from "@/components/navigation/Footer";
 import CustomCursor from "@/components/ui/CustomCursor";
@@ -29,14 +29,14 @@ export default async function RootLayout({
   params
 }: {
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
 
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
-  
+
   setRequestLocale(locale);
   const messages = await getMessages();
 
