@@ -52,7 +52,7 @@ export default function Footer() {
       </div>
       
       <div className="container mx-auto px-6 md:px-12 mt-16 pt-8 border-t border-ivory/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs opacity-60">
-        <p>&copy; {new Date().getFullYear()} Adv. CV Santhakumar. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Logsphere Technologies. All rights reserved.</p>
         <div className="flex gap-6">
           <Link href="/privacy" className="hover:text-ivory transition-colors">Privacy Policy</Link>
           <Link href="/accessibility" className="hover:text-ivory transition-colors">Accessibility</Link>
